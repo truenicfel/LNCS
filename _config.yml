@@ -1,3 +1,2 @@
-#remote_theme: adr/slate
-theme: slate
+remote_theme: adr/slate
 anchors: true
