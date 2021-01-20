@@ -378,7 +378,7 @@ Jede Art von Währung muss dem Betrug mit dieser Währung entgegenwirken. Bei ge
 
 Erklärung wie Blöcke aufgebaut sind, was Blöcke enthalten, verschiedene Bausteine des Bitcoin Netzwerks.
 
-\subsection{Transaktion}
+\subsection{Transaktion}\label{sec:transaktionen}
 
 Um mit Bitcoin Transaktionen durchzuführen wird mithilfe eines sogenannten Wallets (dt. Geldbeutel) eine Transaktion durchgeführt. Die Wallet Software speichert die privaten und öffentlichen Schlüssel, die zur Signatur von Transaktionen und zur Verifikation des Besitzes der Bitcoins eingesetzt werden. Außerdem bildet die Wallet Software eine syntaktisch korrekte Transaktion und speist diese in das Bitcoin Netzwerk ein. Die für die nachfolgenden Abschnitte wichtigen Datenfelder und Mechanismen einer Transaktion werden in diesem Abschnitt beschrieben.
 
@@ -386,7 +386,20 @@ Digitale Signaturen werden eingesetzt um zu beweisen, dass ein beliebiger Datens
 
 In Bitcoin ist die Nachricht, die signiert wird, die Trasaktion. Dabei können Teile oder die gesamte Transaktion in der Signatur verwendet werden. Das ist in verschiedenen Szenarien nützlich \citep{bitcoinbook}. Mithilfe von Signaturen und deren Verifikationen werden unteilbare Geldmittel (engl. \textit{funds}) \textit{unlocked} bzw. für die Nutzung in einer weiteren Transaktion freigeschaltet. Diese Geldmittel werden \textit{UTXOs} genannt. UTXO steht für einen \textit{unspent transaction output} \citep{bitcoinbook}, also ein Geldmittel, dass noch nicht ausgegeben wurde . Das Freischalten und Sperren wird in Form von Skripten innerhalb einer Transaktion spezifiziert. 
 
-Inn
+\begin{figure}
+  \centering
+  \includegraphics[width=.8\textwidth]{grafiken/tableTransaction.png}
+  \caption{Zeigt die für diese Arbeit relevanten Felder einer Transaktion.}
+  \label{fig:transactionTable}
+\end{figure}
+
+\Cref{fig:transactionTable} zeigt den Aufbau einer Transaktion. Das Feld \textit{vout} beschreibt die neuen UTXOs (eine Liste), die bei der Transaktion entstehen. Jeder UTXO hat einen Betrag und ein Skript mit dem der Betrag freigeschaltet werden kann. Das Skript ist in der Sprache \textit{Script} geschrieben. Script ist eine "Forth-like reverse-polish notation stack-based execution language" \citep{bitcoinbook} und wird an dieser Stelle nicht im Detail beschrieben. Wichtig ist jedoch, dass mit diesen Skripten Signaturen erzeugt und geprüft werden können. In den meisten Fällen wird der UTXO mit dem \textit{Pay-to-Public-Key-Hash} \citep{bitcoinbook} Skript gesperrt. Das bedeutet, dass zum Entsperren eine Signatur über die Transaktion benötigt wird und ein öffentlicher Schlüssel dessen Hash Wert mit dem im Skript gegebenen \textit{Public Key Hash} übereinstimmt. Im Feld \textit{vin} werden die Geldmittel spezifziert, die versendet werden. Dies passiert über die Referenz auf UTXOs, die, im Falle eines \textit{Pay-to-Public-Key-Hash} Skriptes,  mithilfe einer Signatur und eines öffentlichen Schlüssels entsperrt werden kann.
+
+Auf diese Weise entsteht eine Verkettung von Transaktionen. Die UTXOs einer Transaktionen dienen als Geldmittel für eine andere Transaktion, welche wieder neue UTXOs anlegt, welche wieder als Geldmittel verwendet werden können. Die UTXOs sind dabei unteilbar. Soll zum Beispiel eine Transaktion über 5 Bitcoin durchgeführt werden und es steht nur ein UTXO in Höhe von 10 Bitcoin zur Verfügung \footnote{Der Betrag eines UTXOs wird nur einmal im vout Feld einer Transaktion spezifiziert. Im vin ist der Betrag implizit über die Referenz auf den UTXO enthalten.} so muss der Sender zwei UTXOs im vout Feld definieren. Einen für den Empfänger der 5 Bitcoin und einen für sich selbst als Wechselgeld.
+
+Bei jeder Transaktion werden außerdem Gebühren durch den Sender definiert. Diese Gebühren sind nicht notwendig allerdings beschleunigen sie die Verifizierung der Transaktion. Die Gebühen werden über die Differenz der vin und der vout Beträge implizit angegeben.
+
+\subsection{Block}\label{sec:Block}
 
 \section{Informationsverbreitung}\label{sec:informationsverbreitung}
 
