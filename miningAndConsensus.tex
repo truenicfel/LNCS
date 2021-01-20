@@ -378,6 +378,16 @@ Jede Art von Währung muss dem Betrug mit dieser Währung entgegenwirken. Bei ge
 
 Erklärung wie Blöcke aufgebaut sind, was Blöcke enthalten, verschiedene Bausteine des Bitcoin Netzwerks.
 
+\subsection{Transaktion}
+
+Um mit Bitcoin Transaktionen durchzuführen wird mithilfe eines sogenannten Wallets (dt. Geldbeutel) eine Transaktion durchgeführt. Die Wallet Software speichert die privaten und öffentlichen Schlüssel, die zur Signatur von Transaktionen und zur Verifikation des Besitzes der Bitcoins eingesetzt werden. Außerdem bildet die Wallet Software eine syntaktisch korrekte Transaktion und speist diese in das Bitcoin Netzwerk ein. Die für die nachfolgenden Abschnitte wichtigen Datenfelder und Mechanismen einer Transaktion werden in diesem Abschnitt beschrieben.
+
+Digitale Signaturen werden eingesetzt um zu beweisen, dass ein beliebiger Datenstrom (z.B. eine E-Mail) tatsächlich von einer bestimmten Person verfasst wurde. Dabei wird mithilfe des Datenstroms und des privaten Schlüssels eine Signatur berechnet, welche dann mithilfe des öffentlichen Schlüssels verifziert werden kann. Mithilfe des Datenstroms, des öffentlichen Schlüssels und der Signatur, kann jeder sicherstellen, dass der Datenstrom vom Besitzer des privaten Schlüssels verfasst wurde. In Bitcoin wird der \textit{Elliptic Curve Digital Signature Algorithm} eingesetzt um den Besitz von Bitcoin zu beweisen \citep{bitcoinbook}.
+
+In Bitcoin ist die Nachricht, die signiert wird, die Trasaktion. Dabei können Teile oder die gesamte Transaktion in der Signatur verwendet werden. Das ist in verschiedenen Szenarien nützlich \citep{bitcoinbook}. Mithilfe von Signaturen und deren Verifikationen werden unteilbare Geldmittel (engl. \textit{funds}) \textit{unlocked} bzw. für die Nutzung in einer weiteren Transaktion freigeschaltet. Diese Geldmittel werden \textit{UTXOs} genannt. UTXO steht für einen \textit{unspent transaction output} \citep{bitcoinbook}, also ein Geldmittel, dass noch nicht ausgegeben wurde . Das Freischalten und Sperren wird in Form von Skripten innerhalb einer Transaktion spezifiziert. 
+
+Inn
+
 \section{Informationsverbreitung}\label{sec:informationsverbreitung}
 
 Was macht ein Knoten wenn er eine Transaktion erhält, was macht ein Knoten wenn er einen Block erhält. Bilder mit Netzwerkverbreitung. Am Ende eine Überleitung zu Vertrauen in die Daten (warum wird der längeren Blockchain eher vertraut als der kürzeren?
