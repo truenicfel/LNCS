@@ -397,11 +397,28 @@ In Bitcoin ist die Nachricht, die signiert wird, die Trasaktion. Dabei können T
 
 Auf diese Weise entsteht eine Verkettung von Transaktionen. Die UTXOs einer Transaktionen dienen als Geldmittel für eine andere Transaktion, welche wieder neue UTXOs anlegt, welche wieder als Geldmittel verwendet werden können. Die UTXOs sind dabei unteilbar. Soll zum Beispiel eine Transaktion über 5 Bitcoin durchgeführt werden und es steht nur ein UTXO in Höhe von 10 Bitcoin zur Verfügung \footnote{Der Betrag eines UTXOs wird nur einmal im vout Feld einer Transaktion spezifiziert. Im vin ist der Betrag implizit über die Referenz auf den UTXO enthalten.} so muss der Sender zwei UTXOs im vout Feld definieren. Einen für den Empfänger der 5 Bitcoin und einen für sich selbst als Wechselgeld.
 
-Bei jeder Transaktion werden außerdem Gebühren durch den Sender definiert. Diese Gebühren sind nicht notwendig allerdings beschleunigen sie die Verifizierung der Transaktion. Die Gebühen werden über die Differenz der vin und der vout Beträge implizit angegeben.
+Bei jeder Transaktion werden außerdem Gebühren durch den Sender definiert. Diese Gebühren sind nicht notwendig allerdings beschleunigen sie die Verifizierung der Transaktion. Die Gebühren werden über die Differenz der vin und der vout Beträge implizit angegeben.
 
 \subsection{Block}\label{sec:Block}
 
 Die im letzten Abschnitt beschriebenen Transaktionen werden in sogenannte Blöcke aggregiert um innerhalb des Bitcoin Netzwerks ein gemeinsames Verständnis zu schaffen, welche UTXOs existieren und welche bereits ausgegeben wurden. Ein Block beginnt mit einigen Metadaten und dem \textit{Block Header}. Der Block Header enthält einige für das Mining relevante Felder, welche im Folgenden erklärt werden.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=.8\textwidth]{grafiken/tableBlock.png}
+  \caption{Zeigt den Aufbau des Block Headers.}
+  \label{fig:blockTable}
+\end{figure}
+
+\Cref{fig:blockTable} zeigt den Aufbau des Block Headers. Der Hash vom letzten Block bzw. vom letzten Block Header ist eines der wichtigsten Elemente im Block. Er sorgt dafür, dass Blöcke miteinander verknüpft sind. Die Blöcke formen damit eine Kette von Blöcken welche als Blockchain bezeichnet wird. Die Merkle Root ist eine Zusammenfassung der im Block enthaltenen Transaktionen \citep{bitcoinbook}. Sie stellt sicher, dass eine Veränderung der Transaktionen eine Veränderung des Headers zur Folge hat. Der Schwierigkeitsgrad und die Nonce werden bei der Erstellung (Mining) eines Blocks verwendet. Um einen gültigen Block zu erzeugen muss der Hash des Headers kleiner sein als der Schwierigkeitsgrad (auch \textit{Difficulty Target} genannt), der im Header spezifiziert wird. Um verschiedenen Möglichkeiten auszoprobieren gibt es die Nonce im Header. Hier können zufällige Daten eingetragen werden um den Hash des Header zu verändern. Um das Target zu unterschreiten, muss Arbeit aufgebracht werden (ausprobieren vieler verschiedener Nonce Werte). Wurde ein Block gefunden, kann mit nur einer Hash Berechnung verifiziert werden, dass diese Arbeit aufgewendet wurde. Dieser Vorgang wird \textit{Proof-of-Work} genannt.
+
+\subsection{Betrug in Bitcoin}\label{sec:betrug}
+
+Mit den in Abschnitt \Cref{sec:transaktionen} besprochenenen Mechanismen kann ein Empfänger von Bitcoins bestätigen, dass der Absender der tatsächliche Besitzer der Bitcoins ist. Der Empfänger kann die Signaturen verifizieren um die Kette des Besitzes zurückzuverfolgen \citep{bitcoinPDF}. Es ist also nicht möglich Bitcoins zu kopieren oder zu erzeugen, da die Bitcoins bis zu ihrem Ursprung zurückverfolgt werden können. Die Transaktionen werden dabei in der Blockchain gespeichert (siehe Abschnitt \Cref{sec:block}). Dabei stellt sich die Frage wie in einem verteilten System Einigkeit über den Zustand der Blockchain entstehen kann und wie diese gegen Veränderung geschützt wird. Wäre es möglich eine Transaktion im nachhinein zu verändern, so könnte ein Käufer die selben Bitcoins mehrfach ausgegeben und jedes Mal einfach den Empfänger austauschen. In den nachfolgenden Abschnitten wird dieses Problem \footnote{Auch das \textit{Double-Spend Problem} genannt.} durch Mining und das Befolgen einiger einfachen Regeln bei jedem Netzwerkknoten erreicht.
+
+ 
+
+
 \section{Informationsverbreitung}\label{sec:informationsverbreitung}
 
 Was macht ein Knoten wenn er eine Transaktion erhält, was macht ein Knoten wenn er einen Block erhält. Bilder mit Netzwerkverbreitung. Am Ende eine Überleitung zu Vertrauen in die Daten (warum wird der längeren Blockchain eher vertraut als der kürzeren?
