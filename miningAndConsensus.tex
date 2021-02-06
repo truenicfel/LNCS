@@ -399,7 +399,7 @@ Auf diese Weise entsteht eine Verkettung von Transaktionen. Die UTXOs einer Tran
 
 Bei jeder Transaktion werden außerdem Gebühren durch den Sender definiert. Diese Gebühren sind nicht notwendig allerdings beschleunigen sie die Verifizierung der Transaktion und spielen eine wichtige Rolle beim Mining. Die Gebühren werden über die Differenz der vin und der vout Beträge implizit angegeben.
 
-\subsection{Block}\label{sec:Block}
+\subsection{Block}\label{sec:block}
 
 Die im letzten Abschnitt beschriebenen Transaktionen werden in sogenannte Blöcke aggregiert um innerhalb des Bitcoin Netzwerks ein gemeinsames Verständnis zu schaffen, welche UTXOs existieren und welche bereits ausgegeben wurden. Ein Block beginnt mit einigen Metadaten und dem \textit{Block Header}. Der Block Header enthält einige für das Mining relevante Felder, welche im Folgenden erklärt werden.
 
@@ -410,18 +410,18 @@ Die im letzten Abschnitt beschriebenen Transaktionen werden in sogenannte Blöck
   \label{fig:blockTable}
 \end{figure}
 
-\Cref{fig:blockTable} zeigt den Aufbau des Block Headers. Der Hash vom letzten Block bzw. vom letzten Block Header ist eines der wichtigsten Elemente im Block. Er sorgt dafür, dass Blöcke miteinander verknüpft sind. Die Blöcke formen damit eine Kette von Blöcken welche als Blockchain bezeichnet wird. Die Merkle Root ist eine Zusammenfassung der im Block enthaltenen Transaktionen \citep{bitcoinbook}. Sie stellt sicher, dass eine Veränderung der Transaktionen eine Veränderung des Headers zur Folge hat. Der Schwierigkeitsgrad und die Nonce werden bei der Erstellung (Mining) eines Blocks verwendet. Um einen gültigen Block zu erzeugen muss der Hash des Headers kleiner sein als der Schwierigkeitsgrad (auch \textit{Difficulty Target} genannt) der im Header spezifiziert wird. Da das Ergebnis einer Hash Funktion nicht vorhergesagt werden kann müssen verschiedenen Header ausprobiert werden. Das Nonce Feld im Header dient zur Veränderung des Headers und damit zur Veränderung des Hash Wertes. Andere Felder dürfen nicht verändert werden, da der Header sonst nicht mehr gültig ist. Um das Target zu unterschreiten, muss Rechenleistung aufgebracht werden (ausprobieren vieler verschiedener Nonce Werte). Das diese Leistung tatsächlich erbracht wurde kann mit einem einzelnen Durchlauf durch die Hash Funktion verifiziert werden. Dieser Vorgang wird \textit{Proof-of-Work} genannt.
+\Cref{fig:blockTable} zeigt den Aufbau des Block Headers. Der Hash vom letzten Block (bzw. vom letzten Block Header) ist eines der wichtigsten Elemente im Block. Er sorgt dafür, dass Blöcke miteinander verknüpft sind. Die Blöcke formen damit eine Kette von Blöcken welche als Blockchain bezeichnet wird. Die Merkle Root ist eine Zusammenfassung der im Block enthaltenen Transaktionen \citep{bitcoinbook}. Sie stellt sicher, dass eine Veränderung der Transaktionen eine Veränderung des Headers zur Folge hat. Der Schwierigkeitsgrad und die Nonce werden bei der Erstellung (Mining) eines Blocks verwendet. Um einen gültigen Block zu erzeugen muss der Hash des Headers kleiner sein als der Schwierigkeitsgrad (auch \textit{Difficulty Target} genannt) der im Header spezifiziert wird. Da das Ergebnis einer Hash Funktion nicht vorhergesagt werden kann müssen verschiedenen Header ausprobiert werden. Das Nonce Feld im Header dient zur Veränderung des Headers und damit zur Veränderung des Hash Wertes. Andere Felder dürfen nicht verändert werden, da der Header sonst nicht mehr gültig ist. Um das Target zu unterschreiten, muss Rechenleistung aufgebracht werden (ausprobieren vieler verschiedener Nonce Werte). Das diese Leistung tatsächlich erbracht wurde kann mit einem einzelnen Durchlauf durch die Hash Funktion verifiziert werden. Dieser Vorgang wird \textit{Proof-of-Work} genannt.
 
 \subsection{Betrug in Bitcoin}\label{sec:betrug}
 
-Mit den in Abschnitt \Cref{sec:transaktionen} besprochenenen Mechanismen kann ein Empfänger von Bitcoins bestätigen, dass der Absender der tatsächliche Besitzer der Bitcoins ist. Der Empfänger kann die Signaturen verifizieren um die Kette des Besitzes zurückzuverfolgen \citep{bitcoinPDF}. Es ist also nicht möglich Bitcoins zu kopieren oder zu erzeugen, da die Bitcoins bis zu ihrem Ursprung zurückverfolgt werden können. Die Transaktionen werden dabei in der Blockchain gespeichert (siehe Abschnitt \Cref{sec:block}). Dabei stellt sich die Frage wie in einem verteilten System Einigkeit über den Zustand der Blockchain entstehen kann und wie diese gegen Veränderung geschützt wird. Wäre es möglich eine Transaktion im nachhinein zu verändern, so könnte ein Käufer die selben Bitcoins mehrfach ausgegeben. In den nachfolgenden Abschnitten wird dieses Problem (das \textit{Double-Spend Problem}) durch Mining und das Befolgen einiger einfachen Regeln bei jedem Netzwerkknoten gelöst.
+Mit den in \Cref{sec:transaktionen} besprochenenen Mechanismen kann ein Empfänger von Bitcoins bestätigen, dass der Absender der tatsächliche Besitzer der Bitcoins ist. Der Empfänger kann die Signaturen verifizieren um die Kette des Besitzes zurückzuverfolgen \citep{bitcoinPDF}. Es ist also nicht möglich Bitcoins zu kopieren oder zu erzeugen, da die Bitcoins bis zu ihrem Ursprung zurückverfolgt werden können. Die Transaktionen werden dabei in der Blockchain gespeichert (siehe \Cref{sec:block}). Dabei stellt sich die Frage wie in einem verteilten System Einigkeit über den Zustand der Blockchain entstehen kann und wie diese gegen Veränderung geschützt wird. Wäre es möglich eine Transaktion im nachhinein zu verändern, so könnte ein Käufer die selben Bitcoins mehrfach ausgegeben. In den nachfolgenden Abschnitten wird dieses Problem (das \textit{Double-Spend Problem}) durch Mining und das Befolgen einiger einfachen Regeln bei jedem Netzwerkknoten gelöst.
 
 
 \section{Informationsverbreitung}\label{sec:informationsverbreitung}
 
-In den folgenden beiden Abschnitten werden die Regeln beschrieben, mit denen Transaktionen und Blöcke vom Bitcoin Netzwerk akzeptier und propagiert werden. Das Netzwerk ist ein \textit{Peer-to-Peer Netzwerk}. Obwohl die Knoten in einem P2P Netzwerk gleichgestellt sind, nehmen sie unterschiedliche Aufgaben wahr \citep{bitcoinbook}. Nachfolgend werden Knoten, die Routing Aufgaben übernehmen und eine komplette Kopie der Blockchain enthalten als \textit{Full Nodes} bezeichnet. Als Wallet werden Knoten bezeichnet, die lediglich die Schlüssel eines Nutzers verwalten und sich an Full Nodes wenden um Zugriff auf die Blockchain zu erhalten. In Abschnitt \Cref{sec:mining} wird der Begriff \textit{Miner} für Knoten verwendet die Mining durchführen. \Cref{fig:basicNetwork} zeigt ein einfaches Bitcoin Netzwerk. 
+In den folgenden beiden Abschnitten werden die Regeln beschrieben, mit denen Transaktionen und Blöcke vom Bitcoin Netzwerk akzeptiert und verteilt werden. Das Netzwerk ist ein \textit{Peer-to-Peer Netzwerk}. Obwohl die Knoten in einem P2P Netzwerk gleichgestellt sind, nehmen sie unterschiedliche Aufgaben wahr \citep{bitcoinbook}. Nachfolgend werden Knoten, die Routing Aufgaben übernehmen und eine komplette Kopie der Blockchain enthalten als \textit{Full Nodes} bezeichnet. Als Wallet werden Knoten bezeichnet, die lediglich die Schlüssel eines Nutzers verwalten und sich an Full Nodes wenden um Zugriff auf die Blockchain zu erhalten. In \Cref{sec:mining} wird zusätzlich der Begriff \textit{Miner} für Knoten verwendet die Mining durchführen. \Cref{fig:basicNetwork} zeigt ein Teil dieser Komponenten in einem einfachen Bitcoin Netzwerk. 
 
-
+% TODO: This should not be in the document before section Informationsverbreitung
 \begin{figure}
   \centering
   \frame{\includegraphics[width=.8\textwidth]{grafiken/network.png}}
@@ -431,7 +431,28 @@ In den folgenden beiden Abschnitten werden die Regeln beschrieben, mit denen Tra
 
 \subsection{Verbreitung von Transaktionen}\label{sec:transaktionsverbreitung}
 
+Eine Transaktion wird typischerweise in einem Wallet-Knoten erzeugt. Zum Beispiel wenn ein Nutzer einen anderen für einen Service oder ein Produkt bezahlen möchte. Die Transaktion wird entsprechend der in \Cref{sec:transaktionen} beschriebenen Struktur aufgebaut und anschließend über eine Full Node an das P2P Netzwerk übergeben. Beim Erhalt einer Transaktion wird dessen Struktur und Inhalt überprüft. Falls alle Kriterien erfüllt sind, wird die Transaktion an benachbarte Knoten weitergegeben und in den lokalen Speicher für unbestätigte Transaktionen übertragen (auch \textit{Memory Pool} oder \textit{Transaction Pool} genannt). In \Cref{fig:transactionPropagation} wird dieser Vorgang mit einer einzelnen Transaktion dargestellt. Die Transaktion wird in vereinfachter Form nur über die ID (txid) dargestellt, die normalerweise 256-Bit lang ist.
 
+\begin{figure}
+  \centering
+  \frame{\includegraphics[width=.8\textwidth]{grafiken/transactionPropagation.png}}
+  \caption{Die Verbreitung einer Transaktion im P2P Netzwerk. Nach der Überprüfung einer Transaktion wird diese im Memory Pool gespeichert und an benachbarte Knoten weitergeleitet.}
+  \label{fig:transactionPropagation}
+\end{figure}
+
+Um zu Bestätigen, dass eine Transaktion gültig ist wird zunächst geprüft ob der Aufbau korrekt ist. Danach werden einige formale Aspekte des Inhalts überprüft wie zum Beispiel ob die Maximallänge überschritten wurde oder die vin und vout Listen beide mindestens ein Element haben. Weitere wichtige Kriterien\footnote{Es gibt weitere Kriterien, die allerdings weniger relevant für das Verständnis des Minings und der Konsensfindung sind. Diese Regeln sind in \citep{bitcoinbook} oder im Bitcoin Source Code \citep{bitcoincore} aufgelistet.} sind:
+
+\begin{itemize}
+
+\item Die txids von allen vin Elementen müssen im Transaction Pool oder in einem Block der Blockchain\footnote{Für schnelleren Zugriff werden diese im UTXO Set abgespeichert.} enthalten sein. Falls keine passende Transaktion für eines der Elemente gefunden wird, wird die Transaktion dem \textit{Orphan Transaction Pool} hinzugefügt.
+
+\item Keiner der Inputs darf in einer anderen Transaktion als Input vorkommen, da er sonst bereits ausgegeben wurde. Das gilt auch für Transaktionen mit dem gleichen Input im Orphan Transaction Pool.
+
+\item Die Skripte zum Sperren und Entsperren für jedes Input und Output Paar müssen ein gültiges Ergebnis liefern.
+
+\end{itemize}
+
+Wird eine der oben genannten Regeln nicht eingehalten wird diese Transaktion verworfen und nicht im Netzwerk verbreitet. Alle ehrlichen Full Nodes verhindern somit die Verbreitung von falschen oder betrügerischen Transaktionen. Es werden zum Beispiel Transaktionen aussortiert, deren Ersteller nicht Besitzer der UTXOs ist oder wenn eine Transaktion versucht einen UTXO zweimal auszugeben. Durch diese einfachen Regeln entsteht damit ein Konsens im Netzwerk welche Transaktionen gültig sind und welche nicht. Allerdings können doppelt ausgegebene UTXOs nur mithilfe der Blockchain aussortiert werden. Im nächsten Abschnitt wird eine weitere Menge von Regeln beschrieben, die im Netzwerk Konsens über den Zustand der Blockchain erreichen.
 
 \section{Mining}\label{sec:mining}
 
@@ -575,11 +596,11 @@ See \url{https://help.jabref.org/en/CleanupEntries} for an overview of the clean
     \microtypecontext{expansion=sloppy}
   \fi
   \small % ensure correct font size for the bibliography
-  \bibliography{paper}
+  \bibliography{miningAndConsensus}
 \endgroup
 
 % Enfore empty line after bibliography
 \ \\
 %
-All links were last followed on October 5, 2017.
+Alle Links wurden am 6. Februar 2021 das letzte Mal aufgerufen.
 \end{document}
