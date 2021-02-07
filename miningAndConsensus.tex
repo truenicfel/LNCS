@@ -454,11 +454,45 @@ Um zu Bestätigen, dass eine Transaktion gültig ist wird zunächst geprüft ob 
 
 Wird eine der oben genannten Regeln nicht eingehalten wird diese Transaktion verworfen und nicht im Netzwerk verbreitet. Alle ehrlichen Full Nodes verhindern somit die Verbreitung von falschen oder betrügerischen Transaktionen. Es werden zum Beispiel Transaktionen aussortiert, deren Ersteller nicht Besitzer der UTXOs ist oder wenn eine Transaktion versucht einen UTXO zweimal auszugeben. Durch diese einfachen Regeln entsteht damit ein Konsens im Netzwerk welche Transaktionen gültig sind und welche nicht. Allerdings können doppelt ausgegebene UTXOs nur mithilfe der Blockchain aussortiert werden. Im nächsten Abschnitt wird eine weitere Menge von Regeln beschrieben, die im Netzwerk Konsens über den Zustand der Blockchain erreichen.
 
+\subsection{Verbreitung von Blöcken}\label{sec:blockverbreitung}
+
+Nachdem ein Block von einem Mining Knoten erstellt wurde (siehe \Cref{sec:mining}), wird dieser an das Netzwerk übergeben. Ähnlich wie bei der Verbreitung von Transaktionen wird eine Menge von Regeln für jeden Block überprüft. Wird eine der Regeln verletzt, wird der Block verworfen. Der Block muss die in \Cref{sec:block} beschriebene Struktur aufweisen. Außerdem muss der Hash des Headers kleiner sein als das angegebene \textit{Difficulty Target} und alle enthaltenen Transaktionen müssen die in \Cref{sec:transaktionsverbreitung} aufgeführten Regeln einhalten. Durch diese Regeln wird sichergestellt, dass keiner der Miner betrügt. Versucht ein Miner zum Beispiel falsche Transaktionen in einen Block einzubauen, wird der Block vom Netzwerk abgelehnt und der Miner erhält dadurch keinen Gewinn für die aufgewendeten Kosten.
+
+Wenn eine Full Node einen Block erhält, der die Regeln einhält wird er versuchen diesen an die Blockchain anzuhängen. Dafür muss der Knoten herausfinden welcher Block in der Blockchain der Vorgänger des neuen Knotens ist. Das Headerfeld Hash vom letzten Block wird dafür mit den letzten Blöcken der Blockchain verglichen. Dabei kann es zu drei Fällen kommen (siehe auch \Cref{blockchainTypes}):
+
+\begin{itemize}
+
+\item Der passende Block ist das Ende (der neueste Block) der bestehenden Blockchain. Der Block wird an diese Blockchain, die auch \textit{Main Chain} genannt wird, angehängt.
+
+\item Der passende Block ist nicht das Ende der Blockchain sondern ein Block weiter vorne. Auch dieser Fall ist für das Bitcoin Protokoll normal und der Block wird angehängt und bildet eine sogenannte \textit{Secondary Chain}.
+
+\item Der passende Block konnte nicht gefunden werden. Der Block wird im sogenannten Orphan Block Pool gespeichert bis der Elternblock empfangen wird und beide der Blockchain hinzugefügt werden können.
+
+\end{itemize}
+
+\begin{figure}
+  \centering
+  \frame{\includegraphics[width=.8\textwidth]{grafiken/blockchainTypes.png}}
+  \caption{Die verschiedenen Typen von Blockchains: Main Chain, Secondary Chain und Orphan Pool.}
+  \label{fig:blockchainTypes}
+\end{figure}
+
+In allen der aufgeführten Fälle wird der Block an benachbarte Knoten weitergeleitet. Falls zwei gültige Blöcke etwa zum gleichen Zeitpunkt ins Netzwerk eingespeist werden, kann es zu einem sogenannten Blockchain Fork kommen. Ein Teil des Netzwerks empfängt beispielsweise Block A zuerst und der andere Teil empfängt Block B zuerst. Letztendlich erhält jede Full Node beide Blöcke. Ein Teil des Netzwerks hat dann Block A als neuestes Main Chain Element und Block B als Secondary Chain Element eingetragen. Die anderen Knoten, die Block B zuerst erhalten haben, haben die Main und Secondary Chain exakt umgekehrt aufgebaut. Dieser Konflikt ist üblich und wird durch den nächsten Block, der ins Netzwerk eingespeist wird, gelöst. Basiert dieser neue Block auf Block A, dann werden alle Knoten die längere der beiden Ketten auswählen. Dadurch wird immer die Blockchain ausgewählt in die die meiste Arbeit investiert wurde (\textit{Proof of Work}).
+
+
 \section{Mining}\label{sec:mining}
 
-hier werden die mining grundlagen erklärt: Was ist die aufgabe? Was steckt in der Aufgabe? Was passiert nach dem ein Block gefunden wurde?
+\subsection{Grundlagen}\label{sec:miningGrundlagen}
+
+Durch das Mining werden Transaktionen in Blöcken zusammengefasst, die Merkle Root gebildet und durch das variieren der Nonce ein Block berechnet dessen Hash kleiner als das Difficulty Target ist (siehe \Cref{sec:block}). Um Mining durchführen zu können wird Zugriff auf den Transaction Poool einer Full Node benötigt. Die Mining Hardware ruft zunächst alle unbestätigten Transaktionen ab und baut die Transaktion auf. Mit jedem neu erstellten Block wird eine bestimmte Menge Bitcoins erzeugt. Die Menge der erzeugten Bitcoins wird alle 210.000 Blöcke halbiert. Die neu erzeugten Bitcoins werden dem Miner neben den Gebühren als Belohnung ausgezahlt. Damit wird ein Anreiz geschaffen ehrliches Mining zu betreiben und gleichzeitig entsteht ein Wettlauf um mehr Rechenleistung. Um die Belohung zu erhalten fügt der Miner dem Block eine sogenannte \textit{Coinbase Transaction} hinzu, die die Gebühren und neuen Bitcoins an sein eigenes Bitcoin Konto\footnote{Ist der Miner Teil eines Mining Pools wird der Betrag and die gemeinsame Adresse verteilt und unter allen Teilnehmern im Pool anhand der zur Verfügung gestellten Rechenleistung aufgeteilt.} überweist.  
+
+Hier fehlt noch Adaption der Difficulty.
 
 \section{Sicherheit}\label{sec:Sicherheit}
+
+
+Argumentationsstruktur: Bitcoin ist dezentralisiert --> Jeder kann teilnehmen --> Jeder kann auch am Mining teilnehmen (wäre nur einer fürs Mining zuständig hätte man wieder Single Point of Failure) --> Dadurch ist das Mining auch verwundbar für Manipulation --> Also müssen wir es möglichst schwierig machen zu manipulieren --> wir schaffen einen Anreiz das Mining ehrlich durchzuführen + Wettbewerb --> dadurch versuchen sich die ehrlichen Miner zu überbieten und häufen möglichst viel rEchenlesitung an --> dadurch wird es schwierig genügend rechenleistung als Angreifer aufzubringen
+
 
 Hier werden die punkte der vorherigen Abschnitte vereint und erläutert wie bitcoin vertrauen/einigkeit schafft, indem es der längsten kette von Blöcken vertraut. Das double spend szenario wird erläutert. Umso länger die Kette wird umso mehr vertrauen hat man in die Kette. usw.
 
