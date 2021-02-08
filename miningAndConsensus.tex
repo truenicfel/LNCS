@@ -331,7 +331,7 @@
 
 \begin{document}
 
-\title{Mining und Einigkeit in Bitcoin}
+\title{Mining und Konsens in Bitcoin}
 %If Title is too long, use \titlerunning
 %\titlerunning{Short Title}
 
@@ -376,8 +376,6 @@ Jede Art von Währung muss dem Betrug mit dieser Währung entgegenwirken. Bei ge
 
 \section{Grundlagen}\label{sec:grundlagen}
 
-Erklärung wie Blöcke aufgebaut sind, was Blöcke enthalten, verschiedene Bausteine des Bitcoin Netzwerks.
-
 \subsection{Transaktion}\label{sec:transaktionen}
 
 Um mit Bitcoin Transaktionen durchzuführen wird mithilfe eines sogenannten Wallets (dt. Geldbeutel) eine Transaktion durchgeführt. Die Wallet Software speichert die privaten und öffentlichen Schlüssel, die zur Signatur von Transaktionen und zur Verifikation des Besitzes der Bitcoins eingesetzt werden. Außerdem bildet die Wallet Software eine syntaktisch korrekte Transaktion und speist diese in das Bitcoin Netzwerk ein. Die für die nachfolgenden Abschnitte wichtigen Datenfelder und Mechanismen einer Transaktion werden in diesem Abschnitt beschrieben.
@@ -414,12 +412,12 @@ Die im letzten Abschnitt beschriebenen Transaktionen werden in sogenannte Blöck
 
 \subsection{Betrug in Bitcoin}\label{sec:betrug}
 
-Mit den in \Cref{sec:transaktionen} besprochenenen Mechanismen kann ein Empfänger von Bitcoins bestätigen, dass der Absender der tatsächliche Besitzer der Bitcoins ist. Der Empfänger kann die Signaturen verifizieren um die Kette des Besitzes zurückzuverfolgen \citep{bitcoinPDF}. Es ist also nicht möglich Bitcoins zu kopieren oder zu erzeugen, da die Bitcoins bis zu ihrem Ursprung zurückverfolgt werden können. Die Transaktionen werden dabei in der Blockchain gespeichert (siehe \Cref{sec:block}). Dabei stellt sich die Frage wie in einem verteilten System Einigkeit über den Zustand der Blockchain entstehen kann und wie diese gegen Veränderung geschützt wird. Wäre es möglich eine Transaktion im nachhinein zu verändern, so könnte ein Käufer die selben Bitcoins mehrfach ausgegeben. In den nachfolgenden Abschnitten wird dieses Problem (das \textit{Double-Spend Problem}) durch Mining und das Befolgen einiger einfachen Regeln bei jedem Netzwerkknoten gelöst.
+Mit den in \Cref{sec:transaktionen} besprochenenen Mechanismen kann ein Empfänger von Bitcoins bestätigen, dass der Absender der tatsächliche Besitzer der Bitcoins ist. Der Empfänger kann die Signaturen verifizieren um die Kette des Besitzes zurückzuverfolgen \citep{bitcoinPDF}. Es ist also nicht möglich Bitcoins zu kopieren oder zu erzeugen, da die Bitcoins bis zu ihrem Ursprung zurückverfolgt werden können. Die Transaktionen werden dafür in der Blockchain gespeichert (siehe \Cref{sec:block}). Dabei stellt sich die Frage wie in einem verteilten System Einigkeit über den Zustand der Blockchain entstehen kann und wie diese gegen Veränderung geschützt wird. Wäre es möglich eine Transaktion im nachhinein zu verändern, so könnte ein Käufer die selben Bitcoins mehrfach ausgegeben. In den nachfolgenden Abschnitten wird dieses Problem (das \textit{Double-Spend Problem}) durch Mining und das Befolgen einiger einfachen Regeln bei jedem Netzwerkknoten gelöst.
 
 
 \section{Informationsverbreitung}\label{sec:informationsverbreitung}
 
-In den folgenden beiden Abschnitten werden die Regeln beschrieben, mit denen Transaktionen und Blöcke vom Bitcoin Netzwerk akzeptiert und verteilt werden. Das Netzwerk ist ein \textit{Peer-to-Peer Netzwerk}. Obwohl die Knoten in einem P2P Netzwerk gleichgestellt sind, nehmen sie unterschiedliche Aufgaben wahr \citep{bitcoinbook}. Nachfolgend werden Knoten, die Routing Aufgaben übernehmen und eine komplette Kopie der Blockchain enthalten als \textit{Full Nodes} bezeichnet. Als Wallet werden Knoten bezeichnet, die lediglich die Schlüssel eines Nutzers verwalten und sich an Full Nodes wenden um Zugriff auf die Blockchain zu erhalten. In \Cref{sec:mining} wird zusätzlich der Begriff \textit{Miner} für Knoten verwendet die Mining durchführen. \Cref{fig:basicNetwork} zeigt ein Teil dieser Komponenten in einem einfachen Bitcoin Netzwerk. 
+In den folgenden beiden Abschnitten werden die Regeln beschrieben, mit denen Transaktionen und Blöcke vom Bitcoin Netzwerk akzeptiert und verteilt werden. Das Netzwerk ist ein \textit{Peer-to-Peer Netzwerk}. Obwohl die Knoten in einem P2P Netzwerk gleichgestellt sind, nehmen sie unterschiedliche Aufgaben wahr \citep{bitcoinbook} (TODO: formulierung verbessern). Nachfolgend werden Knoten, die Routing Aufgaben übernehmen und eine komplette Kopie der Blockchain enthalten als \textit{Full Nodes} bezeichnet. Als Wallet werden Knoten bezeichnet, die lediglich die Schlüssel eines Nutzers verwalten und sich an Full Nodes wenden um Zugriff auf die Blockchain zu erhalten. In \Cref{sec:mining} wird zusätzlich der Begriff \textit{Miner} für Knoten verwendet die Mining durchführen. \Cref{fig:basicNetwork} zeigt ein Teil dieser Komponenten in einem einfachen Bitcoin Netzwerk. 
 
 % TODO: This should not be in the document before section Informationsverbreitung
 \begin{figure}
@@ -454,7 +452,7 @@ Um zu Bestätigen, dass eine Transaktion gültig ist wird zunächst geprüft ob 
 
 Wird eine der oben genannten Regeln nicht eingehalten wird diese Transaktion verworfen und nicht im Netzwerk verbreitet. Alle ehrlichen Full Nodes verhindern somit die Verbreitung von falschen oder betrügerischen Transaktionen. Es werden zum Beispiel Transaktionen aussortiert, deren Ersteller nicht Besitzer der UTXOs ist oder wenn eine Transaktion versucht einen UTXO zweimal auszugeben. Durch diese einfachen Regeln entsteht damit ein Konsens im Netzwerk welche Transaktionen gültig sind und welche nicht. Allerdings können doppelt ausgegebene UTXOs nur mithilfe der Blockchain aussortiert werden. Im nächsten Abschnitt wird eine weitere Menge von Regeln beschrieben, die im Netzwerk Konsens über den Zustand der Blockchain erreichen.
 
-\subsection{Verbreitung von Blöcken}\label{sec:blockverbreitung}
+\subsection{Verbreitung von Blöcken und Aufbauen der Blockchains}\label{sec:blockverbreitung}
 
 Nachdem ein Block von einem Mining Knoten erstellt wurde (siehe \Cref{sec:mining}), wird dieser an das Netzwerk übergeben. Ähnlich wie bei der Verbreitung von Transaktionen wird eine Menge von Regeln für jeden Block überprüft. Wird eine der Regeln verletzt, wird der Block verworfen. Der Block muss die in \Cref{sec:block} beschriebene Struktur aufweisen. Außerdem muss der Hash des Headers kleiner sein als das angegebene \textit{Difficulty Target} und alle enthaltenen Transaktionen müssen die in \Cref{sec:transaktionsverbreitung} aufgeführten Regeln einhalten. Durch diese Regeln wird sichergestellt, dass keiner der Miner betrügt. Versucht ein Miner zum Beispiel falsche Transaktionen in einen Block einzubauen, wird der Block vom Netzwerk abgelehnt und der Miner erhält dadurch keinen Gewinn für die aufgewendeten Kosten.
 
@@ -482,140 +480,132 @@ In allen der aufgeführten Fälle wird der Block an benachbarte Knoten weitergel
 
 \section{Mining}\label{sec:mining}
 
-\subsection{Grundlagen}\label{sec:miningGrundlagen}
+Der Begriff Mining lässt vermuten, dass das Mining primär für die Generierung neuer Bitcoins genutzt wird. Tatsächlich ist die Generierung neuer Bitcoins nur eine Belohnung neben den Gebühren um Miner für ihren Aufwand zu belohnen. Für das Bitcoin Protokoll dient das Mining hauptsächlich der Validierung und Aufzeichnung der Transaktionen auf der Blockchain. Durch die Aufzeichnung auf der Blockchain wird das sogenannte \textit{Double Spend Problem} gelöst (siehe \Cref{sec:betrug}).  
 
-Durch das Mining werden Transaktionen in Blöcken zusammengefasst, die Merkle Root gebildet und durch das variieren der Nonce ein Block berechnet dessen Hash kleiner als das Difficulty Target ist (siehe \Cref{sec:block}). Um Mining durchführen zu können wird Zugriff auf den Transaction Poool einer Full Node benötigt. Die Mining Hardware ruft zunächst alle unbestätigten Transaktionen ab und baut die Transaktion auf. Mit jedem neu erstellten Block wird eine bestimmte Menge Bitcoins erzeugt. Die Menge der erzeugten Bitcoins wird alle 210.000 Blöcke halbiert. Die neu erzeugten Bitcoins werden dem Miner neben den Gebühren als Belohnung ausgezahlt. Damit wird ein Anreiz geschaffen ehrliches Mining zu betreiben und gleichzeitig entsteht ein Wettlauf um mehr Rechenleistung. Um die Belohung zu erhalten fügt der Miner dem Block eine sogenannte \textit{Coinbase Transaction} hinzu, die die Gebühren und neuen Bitcoins an sein eigenes Bitcoin Konto\footnote{Ist der Miner Teil eines Mining Pools wird der Betrag and die gemeinsame Adresse verteilt und unter allen Teilnehmern im Pool anhand der zur Verfügung gestellten Rechenleistung aufgeteilt.} überweist.  
+Beim Mining werden Transaktionen in Blöcke zusammengefasst. Dafür benötigt ein Miner Zugriff auf den Transaction Pool einer Full Node. Die Transaktionen inklusive einer Transaktion\footnote{\textit{Coinbase Transaktion}}, die die Gebühren und die generierten Bitcoins auf ein private Adresse überschribt, werden in einem Block zusammengefasst. Anschließend müssen alle Header Felder entsprechend der Definition gesetzt werden und der \textit{Proof-of-Work} Algorithmus wird ausgeführt (siehe \Cref{sec:block}). Findet ein Miner einen Block oder empfängt ein Miner den Block, den ein anderer Miner gefunden hat, beginnt der Miner die Arbeit am nächsten Block. Nur der Miner der den Block gefunden hat erhält die volle Belohnung. Es handelt sich beim Mining also um einen \textit{Wettbewerb zwischen den Minern}\footnote{Oft arbeiten Miner in einem Mining Pool an der gemeinsamen Lösung des Problems und teilen die Gewinne entsprechend der zur Verfügung gestellten Rechenleistung auf}.
 
-Hier fehlt noch Adaption der Difficulty.
+Die Zeit, die für das Mining eines Blocks benötigt wird muss ungefähr konstant bleiben. In Bitcoin soll circa alle 10 Minuten ein neuer Block der Blockhain hinzugefügt werden. Dabei handelt es sich um einen Kompromiss zwischen der schnellen Validierung von Transaktionen und der Verhinderung von Blockchain Forks. Durch technologischen Fortschritt und steigende oder sinkende Anzahl von Minern im Bitcoin Netzwerk, verändert sich die insgesamt zur Verfügung gestellte Rechenleistung (auch Hashing Power genannt). Dadurch wird die benötigte Zeit zum Minen eines Blocks größer oder kleiner. Um den zuvor beschriebenen Kompromiss zu gewährleisten, muss der Schwierigkeitsgrad des Minings kontinuierlich an die Rechneleistung angepasst werden. Hierfür wird in jeder Full Node alle 2016 Blöcke der Schwierigkeitsgrad angepasst. Dafür wird die tatsächlich benötigte Zeit für das Mining der letzten 2016 Blöcke mit der gewünschten Zeit (20160 Minuten) verglichen. Ist die benötige Zeit kleiner/größer wird der Schwierigkeitsgrad erhöht/gesenkt.
 
-\section{Sicherheit}\label{sec:Sicherheit}
+\section{Konsens und Sicherheit}\label{sec:konsens}
 
+Um zu verstehen warum die in den letzten Abschnitten erläuterten (komplexen) Verfahren notwendig sind, lohnt es sich die grundlegende Idee von Bitcoin erneut zu betrachten. Bitcoin ist eine dezentralisierte digitale Währung, die ohne eine zentrale Autorität auskommen soll. Das Mining dient dabei der Validierung von Transaktionen und ist damit essentiell für die Sicherheit von Bitcoin. Diese Validierung bzw. das Mining muss dabei ebenfalls dezentralisiert ausgeführt werden.  Das Mining ist dabei ein möglicher Angriffspunkt, da jeder daran teilnehmen kann und Transaktionen rückgängig machen kann. Bitcoin nutzt das Proof-of-Work Verfahren  um es Angreifern möglichst schwer zu machen soche Änderung durchzuführen.
 
-Argumentationsstruktur: Bitcoin ist dezentralisiert --> Jeder kann teilnehmen --> Jeder kann auch am Mining teilnehmen (wäre nur einer fürs Mining zuständig hätte man wieder Single Point of Failure) --> Dadurch ist das Mining auch verwundbar für Manipulation --> Also müssen wir es möglichst schwierig machen zu manipulieren --> wir schaffen einen Anreiz das Mining ehrlich durchzuführen + Wettbewerb --> dadurch versuchen sich die ehrlichen Miner zu überbieten und häufen möglichst viel rEchenlesitung an --> dadurch wird es schwierig genügend rechenleistung als Angreifer aufzubringen
+Durch den Schwierigkeitsgrad (ein Block zu erzeugen dauert ca. 10 Minuten) und die Verkettung von Blöcken (siehe \Cref{sec:block}) muss ein Angreifer viel Arbeit aufwenden um die Blockchain zu verändern. Verändert ein Angreifer zum Beispiel den vorletzten Block in der Blockchain so muss er auch den letzten Block neu berechnen da das Netzwerk nur die längste Kette akzeptier also die Kette, in der am meisten Arbeit (Proof-of-Work) steckt. \citep{bitcoinPDF} zeigt, dass die Wahrscheinlichkeit, das der Angreifer aufholt, exponentiell sinkt unter der Vorraussetzung, dass die ehrlichen mehr Hashing Power haben. Damit ist es dem Angreifer nicht mehr möglich alte Blöcke der Blockchain zu verändern, da der Rechenaufwand zu groß wird.
 
+Der Schlüssel zur Sicherheit von Bitcoin ist also die Hashing Power der ehrlichen Miner immer größer zu halten als die Hashing Power eines Angreifers. Im Idealfall würde jeder verfügbare Rechner nur mit dem Mining von Bitcoin beschäftigt sein. Ein Angreifer kann damit unmöglich mehr Rechnenleistung erhalten. Um möglichst nahe an diesen Idealfall zu kommen muss ein Anreiz geschaffen werden ehrliches Mining zu betreiben. Dieser Anreiz ist die Belohnung, die in \Cref{sec:mining} erwähnt wurde. Diese Belohnung sollte größer sein als die aufzuwendenden Energiekosten und den Gewinn, den ein gelungener Angriff mit sich bringt. Durch den Wettbewerb zwischen Minern (siehe \Cref{sec:mining}) wird dieser Effekt noch verstärkt. Würde die Belohnung an alle beteiligten Miner gleichmäßig ausgezahlt, so würde es keinen Anreiz geben die eigene Rechenleistung zu erhöhen. Durch den Wettkampf zwischen den ehrlichen Minern entsteht ein Wettlauf um mehr Rechenleistung bei der ein Angreifer ebenfalls mithalten muss.
 
-Hier werden die punkte der vorherigen Abschnitte vereint und erläutert wie bitcoin vertrauen/einigkeit schafft, indem es der längsten kette von Blöcken vertraut. Das double spend szenario wird erläutert. Umso länger die Kette wird umso mehr vertrauen hat man in die Kette. usw.
-
-Wichtig hierbei ist das es immer schwerer ist aufzoholen um so weiter man zurückgeht, da während man aufholt die ehrlichen Miner auch weiterarbeiten. Allerdings kann, wenn der Großteil der Rechenleistung bei unehrlichen Minern liegt, das System ausgehebelt werden. Das funktioniert allerdings auch wenn eine Mehrheit der Routing Nodes unehrlich ist. Dabei wird allerdings nur das Netzwerk partitioniert. Wichtig ist auch, dass dadurch kein Geld erzeugt werden kann. Es kann nur das double spend problem ausgenutzt werden in dem man eine Transaktion durchführt und sie dann rückgängig macht. Vertrauen steigt durch längere Ketten.
-
-\section{Belohnung}\label{sec:belohnung}
-
-hier wird kurz erwähnt was es mit dem Reward, der fürs mining ausgeschüttet wird auf sich hat (bitcoins + gebühren).
-
-\section{Ergebnisse}\label{sec:ergebnisse}
-
-Das brauche ich vermutlich nicht...
+In \Cref{sec:blockverbreitung} wird beschrieben wie jeder Knoten im Netzwerk den längsten Block auswählt. Die längste Kette bedeutet durch das Proof-of-Work Verfahren auch, das die Kette durch dei größte Menge Hashing Power erstellt wurde. Im Netzwerk entsteht so Konsens über den aktuell gültigen Stand der Blockchain und somit darüber welche Geldmittel bereits ausgegeben wurden und welche nicht. Es kann dabei wie in \Cref{sec:blockverbreitung} gezeigt zu temporären Blockchain Forks kommen. Die Ursache hierfür können zum Beispiel unehrliche....
 
 \section{Zusammenfassung}\label{sec:Zusammenfassung}
 
 Im endeffekt wird bei Bitcoin das Vertrauen in die Währung mit hohem Energieverbrauch sichergestellt. Wer die meiste Energie aufbringen kann um Blöcke zu "minen" kontrolliert die Blockchain. Ziemliche Energieverschwendung aber effizient.
 
-\section{Related Work}
-\label{sec:relatedwork}
+%\section{Related Work}
+%\label{sec:relatedwork}
+%
+%Winery~\cite{Winery} is a graphical \commentontext{modeling}{modeling with one \qq{l}, because of AE} tool.
+%The whole idea of TOSCA is explained by \citet{Binz2009}.
 
-Winery~\cite{Winery} is a graphical \commentontext{modeling}{modeling with one \qq{l}, because of AE} tool.
-The whole idea of TOSCA is explained by \citet{Binz2009}.
-
-\section{LaTeX Hints}
-\label{sec:hints}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=.8\textwidth]{example-image-golden}
-  \caption{Simple Figure. \cite[based on][]{mwe}}
-  \label{fig:simple}
-\end{figure}
-
-\begin{table}
-  \caption{Simple Table}
-  \label{tab:simple}
-  \centering
-  \begin{tabular}{ll}
-    \toprule
-    Heading1 & Heading2 \\
-    \midrule
-    One      & Two      \\
-    Thee     & Four     \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{lstlisting}[
-  % one can adjust spacing here if required
-  % aboveskip=2.5\baselineskip,
-  % belowskip=-.8\baselineskip,
-  caption={Example Java Listing},
-  label=L1,
-  language=Java,
-  float]
-public class Hello {
-    public static void main (String[] args) {
-        System.out.println("Hello World!");
-    }
-}
-\end{lstlisting}
-
-\begin{lstlisting}[
-  % one can adjust spacing here if required
-  % aboveskip=2.5\baselineskip,
-  % belowskip=-.8\baselineskip,
-  caption={Example XML Listing},
-  label=L2,
-  language=XML,
-  float]
-<example attr="demo">
-  text content
-</example>
-\end{lstlisting}
-
-\Cref{L1,L2} show listings typeset using the \texttt{lstlisting} environment.
-
-cref Demonstration: Cref at beginning of sentence, cref in all other cases.
-
-\Cref{fig:simple} shows a simple fact, although \cref{fig:simple} could also show something else.
-
-\Cref{tab:simple} shows a simple fact, although \cref{tab:simple} could also show something else.
-
-\Cref{sec:intro} shows a simple fact, although \cref{sec:intro} could also show something else.
-
-Brackets work as designed:
-<test>
-One can also input backquotes in verbatim text: \verb|`test`|.
-
-The symbol for powerset is now correct: $\powerset$ and not a Weierstrass p ($\wp$).
-
-\begin{inparaenum}
-  \item All these items...
-  \item ...appear in one line
-  \item This is enabled by the paralist package.
-\end{inparaenum}
-
-Please use the \qq{qq command} or the \enquote{enquote command} to quote something.
-``something in quotes'' using plain tex syntax also works.
-
-You can now write words containing hyphens which are hyphenated (application"=specific) at other places.
-This is enabled by an additional configuration of the babel package.
-In case you write \qq{application-specific}, then the word will only be hyphenated at the dash.
-You can also write applica\allowbreak{}tion-specific, but this is much more effort.
-
-The words \qq{workflow} and \qq{dwarflike} can be copied from the PDF and pasted to a text file.
-
-Numbers can written plain text (such as 100), by using the siunitx package like that:
-\SI{100}{\km\per\hour},
-or by using plain \LaTeX{} (and math mode):
-$100 \frac{\mathit{km}}{h}$.
-
-\section{Conclusion and Outlook}
-\label{sec:outlook}
-\lipsum[1-2]
-
-\subsubsection*{Acknowledgments}
-\ldots
-
-In the bibliography, use \texttt{\textbackslash textsuperscript} for \qq{st}, \qq{nd}, \ldots:
-E.g., \qq{The 2\textsuperscript{nd} conference on examples}.
-When you use \href{https://www.jabref.org}{JabRef}, you can use the clean up command to achieve that.
-See \url{https://help.jabref.org/en/CleanupEntries} for an overview of the cleanup functionality.
+%\section{LaTeX Hints}
+%\label{sec:hints}
+%
+%\begin{figure}
+%  \centering
+%  \includegraphics[width=.8\textwidth]{example-image-golden}
+%  \caption{Simple Figure. \cite[based on][]{mwe}}
+%  \label{fig:simple}
+%\end{figure}
+%
+%\begin{table}
+%  \caption{Simple Table}
+%  \label{tab:simple}
+%  \centering
+%  \begin{tabular}{ll}
+%    \toprule
+%    Heading1 & Heading2 \\
+%    \midrule
+%    One      & Two      \\
+%    Thee     & Four     \\
+%    \bottomrule
+%  \end{tabular}
+%\end{table}
+%
+%\begin{lstlisting}[
+%  % one can adjust spacing here if required
+%  % aboveskip=2.5\baselineskip,
+%  % belowskip=-.8\baselineskip,
+%  caption={Example Java Listing},
+%  label=L1,
+%  language=Java,
+%  float]
+%public class Hello {
+%    public static void main (String[] args) {
+%        System.out.println("Hello World!");
+%    }
+%}
+%\end{lstlisting}
+%
+%\begin{lstlisting}[
+%  % one can adjust spacing here if required
+%  % aboveskip=2.5\baselineskip,
+%  % belowskip=-.8\baselineskip,
+%  caption={Example XML Listing},
+%  label=L2,
+%  language=XML,
+%  float]
+%<example attr="demo">
+%  text content
+%</example>
+%\end{lstlisting}
+%
+%\Cref{L1,L2} show listings typeset using the \texttt{lstlisting} environment.
+%
+%cref Demonstration: Cref at beginning of sentence, cref in all other cases.
+%
+%\Cref{fig:simple} shows a simple fact, although \cref{fig:simple} could also show something else.
+%
+%\Cref{tab:simple} shows a simple fact, although \cref{tab:simple} could also show something else.
+%
+%\Cref{sec:intro} shows a simple fact, although \cref{sec:intro} could also show something else.
+%
+%Brackets work as designed:
+%<test>
+%One can also input backquotes in verbatim text: \verb|`test`|.
+%
+%The symbol for powerset is now correct: $\powerset$ and not a Weierstrass p ($\wp$).
+%
+%\begin{inparaenum}
+%  \item All these items...
+%  \item ...appear in one line
+%  \item This is enabled by the paralist package.
+%\end{inparaenum}
+%
+%Please use the \qq{qq command} or the \enquote{enquote command} to quote something.
+%``something in quotes'' using plain tex syntax also works.
+%
+%You can now write words containing hyphens which are hyphenated (application"=specific) at other places.
+%This is enabled by an additional configuration of the babel package.
+%In case you write \qq{application-specific}, then the word will only be hyphenated at the dash.
+%You can also write applica\allowbreak{}tion-specific, but this is much more effort.
+%
+%The words \qq{workflow} and \qq{dwarflike} can be copied from the PDF and pasted to a text file.
+%
+%Numbers can written plain text (such as 100), by using the siunitx package like that:
+%\SI{100}{\km\per\hour},
+%or by using plain \LaTeX{} (and math mode):
+%$100 \frac{\mathit{km}}{h}$.
+%
+%\section{Conclusion and Outlook}
+%\label{sec:outlook}
+%\lipsum[1-2]
+%
+%\subsubsection*{Acknowledgments}
+%\ldots
+%
+%In the bibliography, use \texttt{\textbackslash textsuperscript} for \qq{st}, \qq{nd}, \ldots:
+%E.g., \qq{The 2\textsuperscript{nd} conference on examples}.
+%When you use \href{https://www.jabref.org}{JabRef}, you can use the clean up command to achieve that.
+%See \url{https://help.jabref.org/en/CleanupEntries} for an overview of the cleanup functionality.
 
 \renewcommand{\bibsection}{\section*{References}} % requried for natbib to have "References" printed and as section*, not chapter*
 % Use natbib compatbile splncsnat style.
