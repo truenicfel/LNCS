@@ -378,7 +378,7 @@ Jede Art von Währung muss dem Betrug mit dieser Währung entgegenwirken. Bei ge
 
 \subsection{Transaktion}\label{sec:transaktionen}
 
-Um mit Bitcoin Transaktionen durchzuführen wird mithilfe eines sogenannten Wallets (dt. Geldbeutel) eine Transaktion durchgeführt. Die Wallet Software speichert die privaten und öffentlichen Schlüssel, die zur Signatur von Transaktionen und zur Verifikation des Besitzes der Bitcoins eingesetzt werden. Außerdem bildet die Wallet Software eine syntaktisch korrekte Transaktion und speist diese in das Bitcoin Netzwerk ein. Die für die nachfolgenden Abschnitte wichtigen Datenfelder und Mechanismen einer Transaktion werden in diesem Abschnitt beschrieben.
+Um mit Bitcoin Transaktionen durchzuführen wird mithilfe eines sogenannten Wallets (dt. Geldbeutel) eine Transaktion durchgeführt. Die Wallet Software speichert die privaten und öffentlichen Schlüssel, die zur Signatur von Transaktionen und zur Verifikation des Besitzes der Bitcoins eingesetzt werden. Außerdem bildet die Wallet Software bei Bedarf eine syntaktisch korrekte Transaktion und speist diese in das Bitcoin Netzwerk ein. Die für die nachfolgenden Abschnitte wichtigen Datenfelder und Mechanismen einer Transaktion werden in diesem Abschnitt beschrieben.
 
 Digitale Signaturen werden eingesetzt um zu beweisen, dass ein beliebiger Datenstrom (z.B. eine E-Mail) tatsächlich von einer bestimmten Person verfasst wurde. Dabei wird mithilfe des Datenstroms und des privaten Schlüssels eine Signatur berechnet, welche dann mithilfe des öffentlichen Schlüssels verifziert werden kann. Mithilfe des Datenstroms, des öffentlichen Schlüssels und der Signatur, kann jeder sicherstellen, dass der Datenstrom vom Besitzer des privaten Schlüssels verfasst wurde. In Bitcoin wird der \textit{Elliptic Curve Digital Signature Algorithm} eingesetzt um den Besitz von Bitcoin zu beweisen \citep{bitcoinbook}.
 
@@ -391,15 +391,15 @@ In Bitcoin ist die Nachricht, die signiert wird, die Trasaktion. Dabei können T
   \label{fig:transactionTable}
 \end{figure}
 
-\Cref{fig:transactionTable} zeigt den Aufbau einer Transaktion. Das Feld \textit{vout} beschreibt die neuen UTXOs (eine Liste), die bei der Transaktion angelegt werden. Jeder dieser UTXOs hat einen Betrag und ein Skript mit dem der Betrag freigeschaltet werden kann. Das Skript ist in der Sprache \textit{Script} geschrieben. Script ist eine "Forth-like reverse-polish notation stack-based execution language" \citep{bitcoinbook} und wird an dieser Stelle nicht im Detail beschrieben. Wichtig ist jedoch, dass mit diesen Skripten Signaturen erzeugt und geprüft werden können. In den meisten Fällen wird der UTXO mit dem \textit{Pay-to-Public-Key-Hash} \citep{bitcoinbook} Skript gesperrt. Das bedeutet, dass zum Entsperren eine Signatur über die Transaktion benötigt wird und ein öffentlicher Schlüssel dessen Hash Wert mit dem im Skript gegebenen \textit{Public Key Hash} übereinstimmen muss. Im Feld \textit{vin} werden die Geldmittel spezifziert, die versendet werden. Dies passiert über die Referenz auf UTXOs, die nach dem oben beschriebenen Verfahren entsprerrt werden müssen.
+\Cref{fig:transactionTable} zeigt den Aufbau einer Transaktion. Das Feld \textit{vout} beschreibt die neuen UTXOs (eine Liste), die bei der Transaktion angelegt werden. Jeder dieser UTXOs hat einen Betrag und ein Skript mit dem der Betrag freigeschaltet werden kann. Das Skript ist in der Sprache \textit{Script} geschrieben. Mit einem solchen Skript werden Signaturen erzeugt und geprüft. In den meisten Fällen wird der UTXO mit dem \textit{Pay-to-Public-Key-Hash} \citep{bitcoinbook} Skript gesperrt. Das bedeutet, dass zum Entsperren eine Signatur über die Transaktion benötigt wird.  Im Feld \textit{vin} werden die Geldmittel spezifziert, die versendet werden. Dies passiert über die Referenz auf UTXOs die in \textit{vout} Abschnitten von anderen Transaktionen stehen.
 
 Auf diese Weise entsteht eine Verkettung von Transaktionen. Die UTXOs einer Transaktionen dienen als Geldmittel für eine andere Transaktion, welche wieder neue UTXOs anlegt, welche wieder als Geldmittel verwendet werden können. Die UTXOs sind dabei unteilbar. Soll zum Beispiel eine Transaktion über 5 Bitcoin durchgeführt werden und es steht nur ein UTXO in Höhe von 10 Bitcoin zur Verfügung \footnote{Der Betrag eines UTXOs wird nur einmal im vout Feld einer Transaktion spezifiziert. Im vin ist der Betrag implizit über die Referenz auf den UTXO enthalten.} so muss der Sender zwei UTXOs im vout Feld definieren. Einen für den Empfänger der 5 Bitcoin und einen für sich selbst als Wechselgeld.
 
-Bei jeder Transaktion werden außerdem Gebühren durch den Sender definiert. Diese Gebühren sind nicht notwendig allerdings beschleunigen sie die Verifizierung der Transaktion und spielen eine wichtige Rolle beim Mining. Die Gebühren werden über die Differenz der vin und der vout Beträge implizit angegeben.
+Bei jeder Transaktion werden außerdem Gebühren durch den Sender definiert. Diese Gebühren sind nicht notwendig allerdings beschleunigen sie die Verifizierung der Transaktion und spielen eine wichtige Rolle beim Mining (\Cref{sec:mining}). Die Gebühren werden über die Differenz der vin und der vout Beträge implizit angegeben.
 
 \subsection{Block}\label{sec:block}
 
-Die im letzten Abschnitt beschriebenen Transaktionen werden in sogenannte Blöcke aggregiert um innerhalb des Bitcoin Netzwerks ein gemeinsames Verständnis zu schaffen, welche UTXOs existieren und welche bereits ausgegeben wurden. Ein Block beginnt mit einigen Metadaten und dem \textit{Block Header}. Der Block Header enthält einige für das Mining relevante Felder, welche im Folgenden erklärt werden.
+Die im letzten Abschnitt beschriebenen Transaktionen werden in sogenannte Blöcke aggregiert um innerhalb des Bitcoin Netzwerks ein gemeinsames Verständnis zu schaffen, welche UTXOs existieren und welche bereits ausgegeben wurden. Ein Block beginnt mit einigen Metadaten und dem \textit{Block Header}. Der Block Header enthält einige für das Mining und der Konsensfindung relevante Felder, welche im Folgenden erklärt werden.
 
 \begin{figure}
   \centering
@@ -408,7 +408,7 @@ Die im letzten Abschnitt beschriebenen Transaktionen werden in sogenannte Blöck
   \label{fig:blockTable}
 \end{figure}
 
-\Cref{fig:blockTable} zeigt den Aufbau des Block Headers. Der Hash vom letzten Block (bzw. vom letzten Block Header) ist eines der wichtigsten Elemente im Block. Er sorgt dafür, dass Blöcke miteinander verknüpft sind. Die Blöcke formen damit eine Kette von Blöcken welche als Blockchain bezeichnet wird. Die Merkle Root ist eine Zusammenfassung der im Block enthaltenen Transaktionen \citep{bitcoinbook}. Sie stellt sicher, dass eine Veränderung der Transaktionen eine Veränderung des Headers zur Folge hat. Der Schwierigkeitsgrad und die Nonce werden bei der Erstellung (Mining) eines Blocks verwendet. Um einen gültigen Block zu erzeugen muss der Hash des Headers kleiner sein als der Schwierigkeitsgrad (auch \textit{Difficulty Target} genannt) der im Header spezifiziert wird. Da das Ergebnis einer Hash Funktion nicht vorhergesagt werden kann müssen verschiedenen Header ausprobiert werden. Das Nonce Feld im Header dient zur Veränderung des Headers und damit zur Veränderung des Hash Wertes. Andere Felder dürfen nicht verändert werden, da der Header sonst nicht mehr gültig ist. Um das Target zu unterschreiten, muss Rechenleistung aufgebracht werden (ausprobieren vieler verschiedener Nonce Werte). Das diese Leistung tatsächlich erbracht wurde kann mit einem einzelnen Durchlauf durch die Hash Funktion verifiziert werden. Dieser Vorgang wird \textit{Proof-of-Work} genannt.
+\Cref{fig:blockTable} zeigt den Aufbau des Block Headers. Der Hash vom letzten Block (bzw. vom letzten Block Header) ist eines der wichtigsten Elemente im Block. Er sorgt dafür, dass Blöcke miteinander verknüpft sind. Die Blöcke formen damit eine Kette von Blöcken welche als Blockchain bezeichnet wird. Die Merkle Root ist eine Zusammenfassung der im Block enthaltenen Transaktionen \citep{bitcoinbook}. Sie stellt sicher, dass eine Veränderung der Transaktionen eine Veränderung des Headers zur Folge hat. Der Schwierigkeitsgrad und die Nonce werden bei der Erstellung (Mining) eines Blocks verwendet. Um einen gültigen Block zu erzeugen muss der Hash des Headers kleiner sein als der Schwierigkeitsgrad (auch \textit{Difficulty Target} genannt), der im Header spezifiziert wird. Da das Ergebnis einer Hash Funktion nicht vorhergesagt werden kann müssen verschiedenen Header ausprobiert werden. Das Nonce Feld im Header dient zur Veränderung des Headers und damit zur Veränderung des Hash Wertes. Andere Felder dürfen nicht verändert werden, da der Header sonst nicht mehr gültig ist. Um das Target zu unterschreiten, muss Rechenleistung aufgebracht werden (ausprobieren vieler verschiedener Nonce Werte). Das diese Leistung tatsächlich erbracht wurde kann mit einem einzelnen Durchlauf durch die Hash Funktion und anschließendem Vergleich mit dem \textit{Difficulty Target} verifiziert werden. Dieser Vorgang wird \textit{Proof-of-Work} genannt.
 
 \subsection{Betrug in Bitcoin}\label{sec:betrug}
 
@@ -417,7 +417,7 @@ Mit den in \Cref{sec:transaktionen} besprochenenen Mechanismen kann ein Empfäng
 
 \section{Informationsverbreitung}\label{sec:informationsverbreitung}
 
-In den folgenden beiden Abschnitten werden die Regeln beschrieben, mit denen Transaktionen und Blöcke vom Bitcoin Netzwerk akzeptiert und verteilt werden. Das Netzwerk ist ein \textit{Peer-to-Peer Netzwerk}. Obwohl die Knoten in einem P2P Netzwerk gleichgestellt sind, nehmen sie unterschiedliche Aufgaben wahr \citep{bitcoinbook} (TODO: formulierung verbessern). Nachfolgend werden Knoten, die Routing Aufgaben übernehmen und eine komplette Kopie der Blockchain enthalten als \textit{Full Nodes} bezeichnet. Als Wallet werden Knoten bezeichnet, die lediglich die Schlüssel eines Nutzers verwalten und sich an Full Nodes wenden um Zugriff auf die Blockchain zu erhalten. In \Cref{sec:mining} wird zusätzlich der Begriff \textit{Miner} für Knoten verwendet die Mining durchführen. \Cref{fig:basicNetwork} zeigt ein Teil dieser Komponenten in einem einfachen Bitcoin Netzwerk. 
+In den folgenden beiden Abschnitten werden die Regeln beschrieben, mit denen Transaktionen und Blöcke vom Bitcoin Netzwerk akzeptiert und verteilt werden. Das Netzwerk ist ein \textit{Peer-to-Peer Netzwerk}. Die Knoten in einem P2P Netzwerk sind gleichgestellt jedoch nehmen sie im Bitcoin Protokoll unterschiedliche Aufgaben wahr. Nachfolgend werden Knoten, die Routing Aufgaben übernehmen und eine komplette Kopie der Blockchain enthalten als \textit{Full Nodes} bezeichnet. Als Wallet werden Knoten bezeichnet, die lediglich die Schlüssel eines Nutzers verwalten und sich an Full Nodes wenden um Zugriff auf die Blockchain zu erhalten. In \Cref{sec:mining} wird zusätzlich der Begriff \textit{Miner} für Knoten verwendet die Mining durchführen. \Cref{fig:basicNetwork} zeigt ein Teil dieser Komponenten in einem einfachen Bitcoin Netzwerk. 
 
 % TODO: This should not be in the document before section Informationsverbreitung
 \begin{figure}
@@ -475,141 +475,35 @@ Wenn eine Full Node einen Block erhält, der die Regeln einhält wird er versuch
   \label{fig:blockchainTypes}
 \end{figure}
 
-In allen der aufgeführten Fälle wird der Block an benachbarte Knoten weitergeleitet. Falls zwei gültige Blöcke etwa zum gleichen Zeitpunkt ins Netzwerk eingespeist werden, kann es zu einem sogenannten Blockchain Fork kommen. Ein Teil des Netzwerks empfängt beispielsweise Block A zuerst und der andere Teil empfängt Block B zuerst. Letztendlich erhält jede Full Node beide Blöcke. Ein Teil des Netzwerks hat dann Block A als neuestes Main Chain Element und Block B als Secondary Chain Element eingetragen. Die anderen Knoten, die Block B zuerst erhalten haben, haben die Main und Secondary Chain exakt umgekehrt aufgebaut. Dieser Konflikt ist üblich und wird durch den nächsten Block, der ins Netzwerk eingespeist wird, gelöst. Basiert dieser neue Block auf Block A, dann werden alle Knoten die längere der beiden Ketten auswählen. Dadurch wird immer die Blockchain ausgewählt in die die meiste Arbeit investiert wurde (\textit{Proof of Work}).
-
+In allen der aufgeführten Fälle wird der Block an benachbarte Knoten weitergeleitet. Falls zwei gültige Blöcke etwa zum gleichen Zeitpunkt ins Netzwerk eingespeist werden, kann es zu einem sogenannten Blockchain Fork kommen. Ein Teil des Netzwerks empfängt beispielsweise Block A zuerst und der andere Teil empfängt Block B zuerst. Letztendlich erhält jede Full Node beide Blöcke. Ein Teil des Netzwerks hat dann Block A als neuestes Main Chain Element und Block B als Secondary Chain Element eingetragen. Die anderen Knoten, die Block B zuerst erhalten haben, haben die Main und Secondary Chain exakt umgekehrt aufgebaut. Dieser Konflikt ist üblich und wird durch den nächsten Block, der ins Netzwerk eingespeist wird, gelöst. Basiert dieser neue Block auf Block A, dann werden alle Knoten die längere der beiden Ketten auswählen. Die längste Kette entspricht der Kette, in die die meiste Arbeit investiert wurde (\textit{Proof of Work}), da jeder Block etwa der gleichen Menge Arbeit entspricht.
 
 \section{Mining}\label{sec:mining}
 
 Der Begriff Mining lässt vermuten, dass das Mining primär für die Generierung neuer Bitcoins genutzt wird. Tatsächlich ist die Generierung neuer Bitcoins nur eine Belohnung neben den Gebühren um Miner für ihren Aufwand zu belohnen. Für das Bitcoin Protokoll dient das Mining hauptsächlich der Validierung und Aufzeichnung der Transaktionen auf der Blockchain. Durch die Aufzeichnung auf der Blockchain wird das sogenannte \textit{Double Spend Problem} gelöst (siehe \Cref{sec:betrug}).  
 
-Beim Mining werden Transaktionen in Blöcke zusammengefasst. Dafür benötigt ein Miner Zugriff auf den Transaction Pool einer Full Node. Die Transaktionen inklusive einer Transaktion\footnote{\textit{Coinbase Transaktion}}, die die Gebühren und die generierten Bitcoins auf ein private Adresse überschribt, werden in einem Block zusammengefasst. Anschließend müssen alle Header Felder entsprechend der Definition gesetzt werden und der \textit{Proof-of-Work} Algorithmus wird ausgeführt (siehe \Cref{sec:block}). Findet ein Miner einen Block oder empfängt ein Miner den Block, den ein anderer Miner gefunden hat, beginnt der Miner die Arbeit am nächsten Block. Nur der Miner der den Block gefunden hat erhält die volle Belohnung. Es handelt sich beim Mining also um einen \textit{Wettbewerb zwischen den Minern}\footnote{Oft arbeiten Miner in einem Mining Pool an der gemeinsamen Lösung des Problems und teilen die Gewinne entsprechend der zur Verfügung gestellten Rechenleistung auf}.
+Beim Mining werden Transaktionen in Blöcke zusammengefasst. Dafür benötigt ein Miner Zugriff auf den Transaction Pool einer Full Node. Die Transaktionen inklusive einer Transaktion\footnote{\textit{Diese Transaktion wird auch \textit{Coinbase Transaktion} genannt.}}, die die Gebühren und die generierten Bitcoins auf ein private Adresse überschribt, werden in einem Block zusammengefasst. Anschließend müssen alle Header Felder entsprechend der Definition gesetzt werden und der \textit{Proof-of-Work} Algorithmus wird ausgeführt (siehe \Cref{sec:block}). Findet ein Miner einen Block oder empfängt ein Miner den Block, den ein anderer Miner gefunden hat, beginnt der Miner die Arbeit am nächsten Block. Nur der Miner der den Block gefunden hat erhält die volle Belohnung. Es handelt sich beim Mining also um einen \textit{Wettbewerb zwischen den Minern}\footnote{Oft arbeiten Miner in einem Mining Pool an der gemeinsamen Lösung des Problems und teilen die Gewinne entsprechend der zur Verfügung gestellten Rechenleistung auf.}.
 
 Die Zeit, die für das Mining eines Blocks benötigt wird muss ungefähr konstant bleiben. In Bitcoin soll circa alle 10 Minuten ein neuer Block der Blockhain hinzugefügt werden. Dabei handelt es sich um einen Kompromiss zwischen der schnellen Validierung von Transaktionen und der Verhinderung von Blockchain Forks. Durch technologischen Fortschritt und steigende oder sinkende Anzahl von Minern im Bitcoin Netzwerk, verändert sich die insgesamt zur Verfügung gestellte Rechenleistung (auch Hashing Power genannt). Dadurch wird die benötigte Zeit zum Minen eines Blocks größer oder kleiner. Um den zuvor beschriebenen Kompromiss zu gewährleisten, muss der Schwierigkeitsgrad des Minings kontinuierlich an die Rechneleistung angepasst werden. Hierfür wird in jeder Full Node alle 2016 Blöcke der Schwierigkeitsgrad angepasst. Dafür wird die tatsächlich benötigte Zeit für das Mining der letzten 2016 Blöcke mit der gewünschten Zeit (20160 Minuten) verglichen. Ist die benötige Zeit kleiner/größer wird der Schwierigkeitsgrad erhöht/gesenkt.
 
 \section{Konsens und Sicherheit}\label{sec:konsens}
 
-Um zu verstehen warum die in den letzten Abschnitten erläuterten (komplexen) Verfahren notwendig sind, lohnt es sich die grundlegende Idee von Bitcoin erneut zu betrachten. Bitcoin ist eine dezentralisierte digitale Währung, die ohne eine zentrale Autorität auskommen soll. Das Mining dient dabei der Validierung von Transaktionen und ist damit essentiell für die Sicherheit von Bitcoin. Diese Validierung bzw. das Mining muss dabei ebenfalls dezentralisiert ausgeführt werden.  Das Mining ist dabei ein möglicher Angriffspunkt, da jeder daran teilnehmen kann und Transaktionen rückgängig machen kann. Bitcoin nutzt das Proof-of-Work Verfahren  um es Angreifern möglichst schwer zu machen soche Änderung durchzuführen.
+Um zu verstehen warum die in den letzten Abschnitten erläuterten Verfahren notwendig sind, lohnt es sich die grundlegende Idee von Bitcoin erneut zu betrachten. Bitcoin ist eine dezentralisierte digitale Währung, die ohne eine zentrale Autorität auskommen soll. Das Mining dient dabei der Validierung von Transaktionen und ist damit essentiell für die Sicherheit von Bitcoin. Diese Validierung bzw. das Mining muss dabei ebenfalls dezentralisiert ausgeführt werden.  Das Mining ist dabei ein möglicher Angriffspunkt, da jeder daran teilnehmen kann und Transaktionen rückgängig machen kann. Bitcoin nutzt das Proof-of-Work Verfahren  um es Angreifern möglichst schwer zu machen soche Änderung durchzuführen.
 
-Durch den Schwierigkeitsgrad (ein Block zu erzeugen dauert ca. 10 Minuten) und die Verkettung von Blöcken (siehe \Cref{sec:block}) muss ein Angreifer viel Arbeit aufwenden um die Blockchain zu verändern. Verändert ein Angreifer zum Beispiel den vorletzten Block in der Blockchain so muss er auch den letzten Block neu berechnen da das Netzwerk nur die längste Kette akzeptier also die Kette, in der am meisten Arbeit (Proof-of-Work) steckt. \citep{bitcoinPDF} zeigt, dass die Wahrscheinlichkeit, das der Angreifer aufholt, exponentiell sinkt unter der Vorraussetzung, dass die ehrlichen mehr Hashing Power haben. Damit ist es dem Angreifer nicht mehr möglich alte Blöcke der Blockchain zu verändern, da der Rechenaufwand zu groß wird.
+Durch den Schwierigkeitsgrad (ein Block zu erzeugen dauert ca. 10 Minuten) und die Verkettung von Blöcken (siehe \Cref{sec:block}) muss ein Angreifer viel Arbeit aufwenden um die Blockchain zu verändern. Verändert ein Angreifer zum Beispiel den vorletzten Block in der Blockchain so muss er auch den letzten Block neu berechnen da das Netzwerk nur die längste Kette akzeptiert also die Kette, in der am meisten Arbeit (Proof-of-Work) steckt. \citep{bitcoinPDF} zeigt, dass die Wahrscheinlichkeit, das der Angreifer aufholt, exponentiell sinkt unter der Vorraussetzung, dass die ehrlichen mehr Hashing Power haben. Damit ist es dem Angreifer nicht mehr möglich alte Blöcke der Blockchain zu verändern, da der Rechenaufwand zu groß wird.
 
 Der Schlüssel zur Sicherheit von Bitcoin ist also die Hashing Power der ehrlichen Miner immer größer zu halten als die Hashing Power eines Angreifers. Im Idealfall würde jeder verfügbare Rechner nur mit dem Mining von Bitcoin beschäftigt sein. Ein Angreifer kann damit unmöglich mehr Rechnenleistung erhalten. Um möglichst nahe an diesen Idealfall zu kommen muss ein Anreiz geschaffen werden ehrliches Mining zu betreiben. Dieser Anreiz ist die Belohnung, die in \Cref{sec:mining} erwähnt wurde. Diese Belohnung sollte größer sein als die aufzuwendenden Energiekosten und den Gewinn, den ein gelungener Angriff mit sich bringt. Durch den Wettbewerb zwischen Minern (siehe \Cref{sec:mining}) wird dieser Effekt noch verstärkt. Würde die Belohnung an alle beteiligten Miner gleichmäßig ausgezahlt, so würde es keinen Anreiz geben die eigene Rechenleistung zu erhöhen. Durch den Wettkampf zwischen den ehrlichen Minern entsteht ein Wettlauf um mehr Rechenleistung bei der ein Angreifer ebenfalls mithalten muss.
 
-In \Cref{sec:blockverbreitung} wird beschrieben wie jeder Knoten im Netzwerk den längsten Block auswählt. Die längste Kette bedeutet durch das Proof-of-Work Verfahren auch, das die Kette durch die größte Menge Hashing Power (ehrlich/unehrlich) erstellt wurde. Im Netzwerk entsteht so Konsens über den aktuell gültigen Stand der Blockchain und somit darüber welche Geldmittel bereits ausgegeben wurden und welche nicht. Es kann dabei wie in \Cref{sec:blockverbreitung} gezeigt zu temporären Blockchain Forks kommen. Die Ursache hierfür könnte zum Beispiel ein Betrugsversuch sein oder auch gleichzeitig erstellte Blöcke. Im Falle eines Betrugsversuchs gelingt dieser nur wenn nur wenige Blöcke (1-2) geändert werden müssen oder wenn die unehrliche Hashing Power über einen längeren Zeitraum größer ist als die Menge der ehrlichen Hashing Power.
+In \Cref{sec:blockverbreitung} wird beschrieben wie jeder Knoten im Netzwerk den längsten Block auswählt. Die längste Kette bedeutet durch das Proof-of-Work Verfahren auch, das die Kette durch die größte Menge Hashing Power erstellt wurde. Die Annahme dabei ist, dass die größte Menge Hashing Power durch das Belohnungsverfahren immer auf der Seite der ehrlichen Miner liegt. Auf diese Weise entsteht im Netzwerk Konsens über den aktuell gültigen Stand der Blockchain und somit darüber welche Geldmittel bereits ausgegeben wurden und welche nicht. Es kann dabei wie in \Cref{sec:blockverbreitung} gezeigt zu temporären Blockchain Forks kommen. Die Ursache hierfür könnte zum Beispiel ein Betrugsversuch sein oder auch gleichzeitig erstellte Blöcke. Im Falle eines Betrugsversuchs gelingt dieser nur wenn nur wenige Blöcke (1-2) geändert werden müssen oder wenn die unehrliche Hashing Power über einen längeren Zeitraum größer ist als die Menge der ehrlichen Hashing Power.
 
 \section{Zusammenfassung}\label{sec:Zusammenfassung}
 
-Die Miner in Bitcoin sind essentieller Bestandteil um die Blockchain aufzubauen und damit das \textit{Double-Spend} Problem zu lösen. Jeder ehrliche Miner stimmt mit seiner Rechenleistung für den korrekten Aufbau der Blockchain im Gegensatz zu anderen verteilten Systemen, bei denen pro IP-Adresse eine Stimme abgegeben wird. Das Konsens Problem ändert sich also von einem \textit{Wer besitzt die Meisten IPs?}-System hin zu einem \textit{Wer besitzt die größte Rechenleistung?}-System. Die Theorie ist dabei, dass es schwieriger ist viel Rechenleistung aufzubringen als viele IP-Adressen zu besitzen. Wer also die meiste Energie aufwenden kann besitzt die Kontrolle über die Blockchain. Wird das Bitcoin Netzwerk also die Infrastruktur, die  Transaktion und Blöcke überprüft und verteilt, ist weniger Anfällig für Angriffe, da jeder Knoten unabhängig von den anderen agiert.
+Die Miner in Bitcoin sind essentieller Bestandteil um die Blockchain aufzubauen und damit das \textit{Double-Spend} Problem zu lösen. Jeder ehrliche Miner stimmt mit seiner Rechenleistung für den korrekten Aufbau der Blockchain im Gegensatz zu anderen verteilten Systemen, bei denen pro IP-Adresse eine Stimme abgegeben wird. Der Mehrheitsentscheid ändert sich also von einem \textit{Wer besitzt die Meisten IPs?}-System hin zu einem \textit{Wer besitzt die größte Rechenleistung?}-System. Wer also die meiste Energie aufwenden kann besitzt die Kontrolle über die Blockchain. Auf diese Weise wird das Bitcoin Netzwerk weniger anfällig gegenüber Angriffen, da es für einen Angreifer schwieriger ist eine große Menge Rechenleistung aufzubringen als eine große Menge IP-Adressen. Durch eine unabhängige Prüfung aller Blöcke und die Auswahl der längsten Kette wird Konsens im Netzwerk zwischen allen ehrlich agierenden Full Nodes hergestellt.
 
-In Bitcoin wird also Sicherheit durch hohen Energieverbrauch (Mining) hergestellt. Das der meiste Energieverbrauch auf der ehrlichen Seite liegt, wird durch die Belohnungen beim Mining sichergestellt. Allerdings ist diese Rentabilität des Minings von äußeren Faktoren bestimmt. Dazu gehört der Wert von Bitcoin, Elektrizitätskosten, Hardwarekosten und die Menge der Bitcoin Nutzer bzw. die Höhe der Gebühren, die bei einer Transaktion anfallen. Die Sicherheit von Bitcoin basiert also auf äußeren Faktoren, auf die das Bitcoin Netzwerk selbst keinen Einfluss hat. Außerdem sind die Schäden für die Umwelt von Bitcoin nicht vernachlässigbar. Würde Bitcoin global und als einzige Währung eingesetzt werden, würden die globalen CO\textsubscript{2} Emissionen um 2,1\% ansteigen. Dabei handelt es sich nur um Emissionen durch die Nutzung von Elektrizität. Der Wert läge noch höher, wenn Emissionen durch Kommunikationsinfrastruktur und Emissionen bei der Herstellung benötigter Hardware ebenfalls betrachtet werden \citep{Becker2013}.
+In Bitcoin wird also Sicherheit durch hohen Energieverbrauch (Mining) hergestellt. Das der meiste Energieverbrauch auf der ehrlichen Seite liegt, wird durch die Belohnungen beim Mining sichergestellt. Allerdings ist die Rentabilität des Minings von äußeren Faktoren bestimmt. Dazu gehört der Wert (in konventionellen Währungen) von Bitcoin, Elektrizitätskosten, Hardwarekosten und die Menge der Bitcoin Nutzer bzw. die Höhe der Gebühren, die bei einer Transaktion anfallen. Die Sicherheit von Bitcoin basiert also auf äußeren Faktoren, auf die das Bitcoin Netzwerk selbst keinen Einfluss hat. Außerdem sind die Schäden für die Umwelt von Bitcoin nicht vernachlässigbar. Würde Bitcoin global und als einzige Währung eingesetzt werden, würden die globalen CO\textsubscript{2} Emissionen um 2,1\% ansteigen. Dabei handelt es sich nur um Emissionen durch die Nutzung von Elektrizität. Der Wert läge noch höher, wenn Emissionen durch Kommunikationsinfrastruktur und Emissionen bei der Herstellung benötigter Hardware ebenfalls betrachtet werden. Auf der anderen Seite sind die Emissionen eines vergleichbaren, global agierenden  konventionellen Währungssystems vernachlässigbar. 
 
-%\section{Related Work}
-%\label{sec:relatedwork}
-%
-%Winery~\cite{Winery} is a graphical \commentontext{modeling}{modeling with one \qq{l}, because of AE} tool.
-%The whole idea of TOSCA is explained by \citet{Binz2009}.
+Das \textit{Proof of Work}-System eignet sich also um das \textit{Double Spend Problem} zu lösen unter der Bedingung, dass die äußeren Faktoren stabil bleiben. Werden mit dem Bitcoin System große Beträge überwiesen sollte zudem gewartet werden bis die Transaktion durch einige zusätzliche Blöcke bestätigt wurde, da dies die Wahrscheinlichkeit einer Änderung gegen null gehen lässt (siehe \Cref{sec:konsens}). Die Frage der Umweltverträglichkeit eines solchen Systems bleibt jedoch offen. Hierfür müssen im Falle einer flächendeckenden Übernahme eine Systems wie Bitcoin, Lösungen für eine Reduktion des Energieverbrauchs gefunden werden. 
 
-%\section{LaTeX Hints}
-%\label{sec:hints}
-%
-%\begin{figure}
-%  \centering
-%  \includegraphics[width=.8\textwidth]{example-image-golden}
-%  \caption{Simple Figure. \cite[based on][]{mwe}}
-%  \label{fig:simple}
-%\end{figure}
-%
-%\begin{table}
-%  \caption{Simple Table}
-%  \label{tab:simple}
-%  \centering
-%  \begin{tabular}{ll}
-%    \toprule
-%    Heading1 & Heading2 \\
-%    \midrule
-%    One      & Two      \\
-%    Thee     & Four     \\
-%    \bottomrule
-%  \end{tabular}
-%\end{table}
-%
-%\begin{lstlisting}[
-%  % one can adjust spacing here if required
-%  % aboveskip=2.5\baselineskip,
-%  % belowskip=-.8\baselineskip,
-%  caption={Example Java Listing},
-%  label=L1,
-%  language=Java,
-%  float]
-%public class Hello {
-%    public static void main (String[] args) {
-%        System.out.println("Hello World!");
-%    }
-%}
-%\end{lstlisting}
-%
-%\begin{lstlisting}[
-%  % one can adjust spacing here if required
-%  % aboveskip=2.5\baselineskip,
-%  % belowskip=-.8\baselineskip,
-%  caption={Example XML Listing},
-%  label=L2,
-%  language=XML,
-%  float]
-%<example attr="demo">
-%  text content
-%</example>
-%\end{lstlisting}
-%
-%\Cref{L1,L2} show listings typeset using the \texttt{lstlisting} environment.
-%
-%cref Demonstration: Cref at beginning of sentence, cref in all other cases.
-%
-%\Cref{fig:simple} shows a simple fact, although \cref{fig:simple} could also show something else.
-%
-%\Cref{tab:simple} shows a simple fact, although \cref{tab:simple} could also show something else.
-%
-%\Cref{sec:intro} shows a simple fact, although \cref{sec:intro} could also show something else.
-%
-%Brackets work as designed:
-%<test>
-%One can also input backquotes in verbatim text: \verb|`test`|.
-%
-%The symbol for powerset is now correct: $\powerset$ and not a Weierstrass p ($\wp$).
-%
-%\begin{inparaenum}
-%  \item All these items...
-%  \item ...appear in one line
-%  \item This is enabled by the paralist package.
-%\end{inparaenum}
-%
-%Please use the \qq{qq command} or the \enquote{enquote command} to quote something.
-%``something in quotes'' using plain tex syntax also works.
-%
-%You can now write words containing hyphens which are hyphenated (application"=specific) at other places.
-%This is enabled by an additional configuration of the babel package.
-%In case you write \qq{application-specific}, then the word will only be hyphenated at the dash.
-%You can also write applica\allowbreak{}tion-specific, but this is much more effort.
-%
-%The words \qq{workflow} and \qq{dwarflike} can be copied from the PDF and pasted to a text file.
-%
-%Numbers can written plain text (such as 100), by using the siunitx package like that:
-%\SI{100}{\km\per\hour},
-%or by using plain \LaTeX{} (and math mode):
-%$100 \frac{\mathit{km}}{h}$.
-%
-%\section{Conclusion and Outlook}
-%\label{sec:outlook}
-%\lipsum[1-2]
-%
-%\subsubsection*{Acknowledgments}
-%\ldots
-%
-%In the bibliography, use \texttt{\textbackslash textsuperscript} for \qq{st}, \qq{nd}, \ldots:
-%E.g., \qq{The 2\textsuperscript{nd} conference on examples}.
-%When you use \href{https://www.jabref.org}{JabRef}, you can use the clean up command to achieve that.
-%See \url{https://help.jabref.org/en/CleanupEntries} for an overview of the cleanup functionality.
-
-\renewcommand{\bibsection}{\section*{References}} % requried for natbib to have "References" printed and as section*, not chapter*
+\renewcommand{\bibsection}{\section*{Referenzen}} % requried for natbib to have "References" printed and as section*, not chapter*
 % Use natbib compatbile splncsnat style.
 % It does provide all features of splncs03, but is developed in a clean way.
 % Source: http://phaseportrait.blogspot.de/2011/02/natbib-compatible-bibtex-style-bst-file.html
@@ -628,5 +522,5 @@ In Bitcoin wird also Sicherheit durch hohen Energieverbrauch (Mining) hergestell
 % Enfore empty line after bibliography
 \ \\
 %
-Alle Links wurden am 6. Februar 2021 das letzte Mal aufgerufen.
+Alle Links wurden am 12. Februar 2021 das letzte Mal aufgerufen.
 \end{document}
