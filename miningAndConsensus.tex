@@ -339,7 +339,10 @@
 \author{Nico Daßler}
 %If there are too many authors, use \authorrunning
 %\authorrunning{First Author et al.}
-\institute{Friedrich-Alexander Universität Erlangen-Nürnberg}
+\institute{
+Friedrich-Alexander Universität Erlangen-Nürnberg,\\
+\email{nico.dassler@fau.de}
+}
 
 %% Multiple insitutes - ALTERNATIVE to the above
 % \author{%
@@ -356,6 +359,7 @@
 %      Insitute 2\\
 %      \email{...}
 %}
+
 
 \maketitle
 
@@ -480,7 +484,7 @@ In allen der aufgeführten Fälle wird der Block an benachbarte Knoten weitergel
 
 \section{Mining}\label{sec:mining}
 
-Der Begriff Mining lässt vermuten, dass das Mining primär für die Generierung neuer Bitcoins genutzt wird. Tatsächlich ist die Generierung neuer Bitcoins nur eine Belohnung neben den Gebühren für Miner. Dadurch werden Miner für ihre Suche nach einem neuen Block und die damit verbundene Arbeit belohnt. Für das Bitcoin-Protokoll dient das Mining hauptsächlich der Validierung und Aufzeichnung der Transaktionen auf der Blockchain. Durch die Aufzeichnung auf\todo{"auf" oder "in" hier} der Blockchain wird das sogenannte \textit{Double-Spend-Problem} gelöst (siehe \Cref{sec:betrug}).
+Der Begriff Mining lässt vermuten, dass das Mining primär für die Generierung neuer Bitcoins genutzt wird. Tatsächlich ist die Generierung neuer Bitcoins nur eine Belohnung neben den Gebühren für Miner. Dadurch werden Miner für ihre Suche nach einem neuen Block und die damit verbundene Arbeit belohnt. Für das Bitcoin-Protokoll dient das Mining hauptsächlich der Validierung und Aufzeichnung der Transaktionen auf der Blockchain. Durch die Aufzeichnung auf der Blockchain wird das sogenannte \textit{Double-Spend-Problem} gelöst (siehe \Cref{sec:betrug}).
 
 Beim Mining werden Transaktionen in Blöcke zusammengefasst. Dafür benötigt ein Miner Zugriff auf den Transaction Pool einer Full Node. Ein Teil der im Pool enthaltenen Transaktionen wird für den nächsten Block ausgewählt. Die Auswahl wird dabei über die Größe des Blocks und die enthaltenen Gebühren getroffen. Der Block darf die maximale Blockgröße nicht überschreiten und der Miner bevorzugt Transaktionen mit hohen Gebühren. Zusätzlich wird die sogenannte Coinbasetransaktion als erste Transaktion in den Block eingefügt. Die Coinbasetransaktion enthält die Gebühren und die generierten Bitcoins, welche auf eine private Adresse überschrieben werden. Anschließend müssen alle Header Felder entsprechend der Definition gesetzt werden und der \textit{Proof-of-Work}-Algorithmus wird ausgeführt (siehe \Cref{sec:block}). Findet ein Miner einen Block oder empfängt ein Miner den Block, den ein anderer Miner gefunden hat, beginnt der Miner die Arbeit am nächsten Block. Nur der Miner, der den Block gefunden hat, erhält die volle Belohnung. Es handelt sich beim Mining also um einen \textit{Wettbewerb zwischen den Minern}\footnote{Oft arbeiten Miner in einem Mining Pool an der gemeinsamen Lösung des Problems und teilen die Gewinne entsprechend der zur Verfügung gestellten Rechenleistung auf.}.
 
